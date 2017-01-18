@@ -29,6 +29,10 @@ func (p *Parser) ParseNewTodo(input string) *Todo {
 	return todo
 }
 
+func (p *Parser) ParseNewTodos(input string) []string {
+	return strings.Split(input, ",")
+}
+
 func (p *Parser) Subject(input string) string {
 	if strings.Contains(input, " due") {
 		index := strings.LastIndex(input, " due")
@@ -36,6 +40,11 @@ func (p *Parser) Subject(input string) string {
 	} else {
 		return input
 	}
+}
+
+func (p *Parser) ExpandProject(input string) string {
+	r, _ := regexp.Compile(`\+\w+[^:]`)
+	return p.matchWords(input, r)[0]
 }
 
 func (p *Parser) Projects(input string) []string {

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"regexp"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -94,6 +95,32 @@ func (a *App) EditTodoDue(input string) {
 		a.Save()
 		fmt.Println("Todo due date updated.")
 	}
+}
+
+func (a *App) ExpandTodo(input string) {
+	a.Load()
+	id, _ := a.getId(input)
+	parser := &Parser{}
+	if id == -1 {
+		return
+	}
+	commonProject := parser.ExpandProject(input)
+
+	todos := strings.LastIndex(input, ":")
+	if len(input) <= todos+1 {
+		fmt.Println("Please specify todos to expand.")
+		return
+	}
+	newTodos := parser.ParseNewTodos(input[todos+1:])
+
+	for _, todo := range newTodos {
+		args := []string{"add +", commonProject, " ", todo}
+		a.AddTodo(strings.Join(args, ""))
+	}
+
+	a.TodoList.Delete(id)
+	a.Save()
+	fmt.Println("Todo expanded.")
 }
 
 func (a *App) ArchiveCompleted() {
