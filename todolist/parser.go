@@ -128,7 +128,6 @@ func (p *Parser) parseArbitraryDateWithYear(_date string, year int) time.Time {
 	if date, err2 = time.Parse("2 Jan 2006", res); err2 == nil {
 		return date
 	}
-
 	fmt.Printf("Could not parse the date you gave me: %s\n", _date)
 	fmt.Println(err1)
 	fmt.Println(err2)
